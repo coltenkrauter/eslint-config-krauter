@@ -1,6 +1,6 @@
 {
   "name": "@coltenkrauter/eslint-config",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": " This package provides eslint configuration as an extensible shared config. ",
   "main": "index.js",
   "scripts": {

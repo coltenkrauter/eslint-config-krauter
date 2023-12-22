@@ -1,0 +1,74 @@
+name: GitHub Release Creation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-release-when-version-changes:
+    name: Create release when package.json version changes
+    concurrency: 1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Get Current Version from package.json
+        id: get-version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+
+      - name: Get Package Version and List Tags
+        run: |
+          git fetch --tags
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          TAGS=$(git tag)
+          TAG_EXISTS=false
+
+          for tag in $TAGS; do
+            if [ "$tag" = "$PACKAGE_VERSION" ]; then
+              TAG_EXISTS=true
+              break
+            fi
+          done
+
+          if [ "$TAG_EXISTS" = "false" ]; then
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+          fi
+
+      - name: Generate Release Name
+        if: env.TAG_EXISTS == 'false'
+        run: |
+          API_URL="https://testapi.devtoolsdaily.com/users"
+          data=$(curl -s "$API_URL" | jq -r '.[] | {firstName, lastName}')
+          random_number=$((RANDOM % 2))
+          select_random() {
+            local array=("$@")
+            local random_index=$((RANDOM % $#))
+            echo "${array[random_index]}"
+          }
+
+          if [[ $random_number -eq 0 ]]; then
+            # Select a random first name
+            first_names=($(echo "$data" | jq -r '.firstName'))
+            codename=$(select_random "${first_names[@]}")
+          else
+            # Select a random last name
+            last_names=($(echo "$data" | jq -r '.lastName'))
+            codename=$(select_random "${last_names[@]}")
+          fi
+
+          echo "CODENAME=$codename" >> $GITHUB_ENV
+
+      - name: Create GitHub Tag and Release
+        if: env.TAG_EXISTS == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT_RELEASE }}
+        run: |
+          tag_name=${{ env.VERSION }}
+
+          echo "Creating GitHub Release for $tag_name"
+          gh release create $tag_name -t "${{ env.CODENAME }} $tag_name" --generate-notes
