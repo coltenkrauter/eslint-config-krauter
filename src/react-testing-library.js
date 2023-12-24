@@ -8,6 +8,7 @@ module.exports = {
         es2024: true,
         node: true,
     },
+    extends: require.resolve('./base.js'),
     overrides: [
         {
             // React testing library rules are specific to tests and extending base.js is not needed as other config will cover them

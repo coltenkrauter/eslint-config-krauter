@@ -4,20 +4,20 @@ interface User {
 }
 
 enum LastName {
-  Murphy = "Smith",
+  Murphy = 'Smith',
 }
 
 class UserAccount {
-  id: number;
+	id: number;
 
-  fullName: string;
+	fullName: string;
 
-  constructor(name: string, id: number) {
-    this.fullName = `${name} ${LastName[name as keyof typeof LastName]}`;
-    this.id = id;
-  }
+	constructor(name: string, id: number) {
+		this.fullName = `${name} ${LastName[name as keyof typeof LastName]}`;
+		this.id = id;
+	}
 }
 
-const user: User = new UserAccount("Murphy", 1);
+const user: User = new UserAccount('Murphy', 1);
 
 export default user;

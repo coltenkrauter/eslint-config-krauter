@@ -11,9 +11,9 @@ export function SampleComponent(): JSX.Element {
   const listTitles = ['sample'];
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col">
+    <div className='container'>
+      <div className='row'>
+        <div className='col'>
           {listTitles.map((listTitle) => (
             <div key={listTitle}>
               <ul>
