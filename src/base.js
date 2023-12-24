@@ -32,6 +32,8 @@ module.exports = {
     ],
     plugins: ['unicorn', 'promise'],
     rules: {
+        'quotes': ['error', 'single', { 'avoidEscape': true, 'allowTemplateLiterals': true }],
+        'indent': ['error', 'tab', { 'SwitchCase': 1, 'VariableDeclarator': 1 }],
         '@typescript-eslint/ban-ts-comment': 'off',
         'promise/catch-or-return': ['error', { allowFinally: true }],
         'unicorn/catch-error-name': [

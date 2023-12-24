@@ -33,6 +33,13 @@ module.exports = {
                     'error',
                     { namedComponents: 'function-declaration' },
                 ],
+                'react/jsx-props-no-spreading': 'off',
+                'jsx-quotes': ['error', 'prefer-single'],
+                'object-curly-spacing': ['error', 'never'],
+
+                // Adjust or disable rules for import/no-unresolved and import/extensions as needed
+                'import/no-unresolved': 'off',
+                'import/extensions': 'off',
             },
         },
         {
